@@ -13,6 +13,7 @@
 #include "st7789.h"
 
 #include "disp_spi.h"
+#include "rom/gpio.h"
 #include "driver/gpio.h"
 
 /*********************

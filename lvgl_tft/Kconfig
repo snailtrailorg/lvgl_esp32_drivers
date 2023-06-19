@@ -35,6 +35,10 @@ menu "LVGL TFT Display controller"
             bool "M5StickC"
             select LV_TFT_DISPLAY_CONTROLLER_ST7735S
             select LV_TFT_DISPLAY_PROTOCOL_SPI
+        config LV_PREDEFINED_DISPLAY_M5STICKC_PLUS
+            bool "M5StickCPlus"
+            select LV_TFT_DISPLAY_CONTROLLER_ST7789
+            select LV_TFT_DISPLAY_PROTOCOL_SPI
         config LV_PREDEFINED_DISPLAY_ERTFT0356
             bool "ER-TFT035-6"
             select LV_TFT_DISPLAY_CONTROLLER_ILI9488
@@ -585,11 +589,11 @@ menu "LVGL TFT Display controller"
         default 2
 
     config LV_M5STICKC_HANDLE_AXP192
-        bool "Handle Backlight and TFT power for M5StickC using AXP192." if LV_PREDEFINED_DISPLAY_M5STICKC || LV_TFT_DISPLAY_CONTROLLER_ST7735S
-        default y if LV_PREDEFINED_DISPLAY_M5STICKC
+        bool "Handle Backlight and TFT power for M5StickC using AXP192." if LV_PREDEFINED_DISPLAY_M5STICKC || LV_PREDEFINED_DISPLAY_M5STICKC_PLUS
+        default y if LV_PREDEFINED_DISPLAY_M5STICKC || LV_PREDEFINED_DISPLAY_M5STICKC_PLUS
         select LV_I2C_DISPLAY
         help
-            Display and TFT power supply on M5StickC is controlled using an
+            Display and TFT power supply on M5StickC or M5StickCPlus is controlled using an
             AXP192 Power Mangerment IC. Select yes if you want to enable TFT IC
             (LDO3) and backlight power using AXP192 by LVGL, or select no if you
             want to take care of power management in your own code.
@@ -602,7 +606,7 @@ menu "LVGL TFT Display controller"
 
     config LV_INVERT_COLORS
         bool "Invert colors in display" if LV_TFT_DISPLAY_CONTROLLER_ILI9341 || LV_TFT_DISPLAY_CONTROLLER_ST7735S || LV_TFT_DISPLAY_CONTROLLER_ILI9481 || LV_TFT_DISPLAY_CONTROLLER_ST7789 || LV_TFT_DISPLAY_CONTROLLER_SSD1306 || LV_TFT_DISPLAY_CONTROLLER_SH1107 || LV_TFT_DISPLAY_CONTROLLER_HX8357 || LV_TFT_DISPLAY_CONTROLLER_GC9A01 || LV_TFT_DISPLAY_CONTROLLER_ILI9163C
-        default y if LV_PREDEFINED_DISPLAY_M5STACK || LV_PREDEFINED_DISPLAY_M5STICKC
+        default y if LV_PREDEFINED_DISPLAY_M5STACK || LV_PREDEFINED_DISPLAY_M5STICKC || LV_PREDEFINED_DISPLAY_M5STICKC_PLUS
         help
             If the colors look inverted on your display, try enabling this.
             If it didn't help try LVGL configuration -> Swap the 2 bytes of RGB565 color.
@@ -751,7 +755,7 @@ menu "LVGL TFT Display controller"
             default 23 if LV_PREDEFINED_DISPLAY_ATAG
             default 23 if LV_PREDEFINED_DISPLAY_M5STACK || LV_PREDEFINED_DISPLAY_M5STICK
             default 23 if LV_PREDEFINED_DISPLAY_M5CORE2
-            default 15 if LV_PREDEFINED_DISPLAY_M5STICKC
+            default 15 if LV_PREDEFINED_DISPLAY_M5STICKC || LV_PREDEFINED_DISPLAY_M5STICKC_PLUS
             default 18 if LV_PREDEFINED_DISPLAY_ADA_FEATHERWING
             default 23 if LV_PREDEFINED_PINS_TKOALA
             default 19 if LV_PREDEFINED_DISPLAY_TTGO
@@ -808,7 +812,7 @@ menu "LVGL TFT Display controller"
             int "GPIO for CLK (SCK / Serial Clock)" if LV_TFT_DISPLAY_PROTOCOL_SPI
             default 18 if LV_PREDEFINED_DISPLAY_M5STACK || LV_PREDEFINED_DISPLAY_M5STICK
             default 18 if LV_PREDEFINED_DISPLAY_M5CORE2
-            default 13 if LV_PREDEFINED_DISPLAY_M5STICKC
+            default 13 if LV_PREDEFINED_DISPLAY_M5STICKC || LV_PREDEFINED_DISPLAY_M5STICKC_PLUS
             default 18 if LV_PREDEFINED_DISPLAY_ATAG
             default 19 if LV_PREDEFINED_DISPLAY_WROVER4
             default 5 if LV_PREDEFINED_DISPLAY_ADA_FEATHERWING
@@ -834,7 +838,7 @@ menu "LVGL TFT Display controller"
             default 5 if LV_PREDEFINED_PINS_38V1
             default 14 if LV_PREDEFINED_DISPLAY_M5STACK || LV_PREDEFINED_DISPLAY_M5STICK
             default 5 if LV_PREDEFINED_DISPLAY_M5CORE2
-            default 5 if LV_PREDEFINED_DISPLAY_M5STICKC
+            default 5 if LV_PREDEFINED_DISPLAY_M5STICKC || LV_PREDEFINED_DISPLAY_M5STICKC_PLUS
             default 22 if LV_PREDEFINED_DISPLAY_WROVER4
             default 15 if LV_PREDEFINED_DISPLAY_ADA_FEATHERWING
             default 5 if LV_PREDEFINED_PINS_TKOALA
@@ -861,7 +865,7 @@ menu "LVGL TFT Display controller"
             default 17 if LV_PREDEFINED_PINS_38V4
             default 27 if LV_PREDEFINED_DISPLAY_M5STACK || LV_PREDEFINED_DISPLAY_M5STICK
             default 15 if LV_PREDEFINED_DISPLAY_M5CORE2
-            default 23 if LV_PREDEFINED_DISPLAY_M5STICKC
+            default 23 if LV_PREDEFINED_DISPLAY_M5STICKC || LV_PREDEFINED_DISPLAY_M5STICKC_PLUS
             default 21 if LV_PREDEFINED_DISPLAY_WROVER4
             default 21 if LV_PREDEFINED_DISPLAY_WT32_SC01
             default 33 if LV_PREDEFINED_DISPLAY_ADA_FEATHERWING
@@ -893,7 +897,7 @@ menu "LVGL TFT Display controller"
             default 18 if LV_PREDEFINED_PINS_38V1
             default 25 if LV_PREDEFINED_PINS_38V4
             default 33 if LV_PREDEFINED_DISPLAY_M5STACK || LV_PREDEFINED_DISPLAY_M5STICK
-            default 18 if LV_PREDEFINED_DISPLAY_M5STICKC
+            default 18 if LV_PREDEFINED_DISPLAY_M5STICKC || LV_PREDEFINED_DISPLAY_M5STICKC_PLUS
             default 18 if LV_PREDEFINED_DISPLAY_WROVER4
             default 4 if LV_PREDEFINED_DISPLAY_ADA_FEATHERWING
             default 4 if LV_PREDEFINED_PINS_TKOALA

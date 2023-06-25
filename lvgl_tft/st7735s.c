@@ -41,10 +41,13 @@ static void st7735s_send_cmd(uint8_t cmd);
 static void st7735s_send_data(void * data, uint16_t length);
 static void st7735s_send_color(void * data, uint16_t length);
 static void st7735s_set_orientation(uint8_t orientation);
+
+#ifdef CONFIG_LV_M5STICKC_HANDLE_AXP192
 static void axp192_write_byte(uint8_t addr, uint8_t data);
 static void axp192_init();
 static void axp192_sleep_in();
 static void axp192_sleep_out();
+#endif
 
 /**********************
  *  STATIC VARIABLES
@@ -227,7 +230,7 @@ static void st7735s_set_orientation(uint8_t orientation)
 
     static void axp192_write_byte(uint8_t addr, uint8_t data)
     {
-        err = lvgl_i2c_write(CONFIG_LV_I2C_DISPLAY_PORT, AXP192_I2C_ADDRESS, addr, &data, 1);
+        esp_err_t ret = lvgl_i2c_write(CONFIG_LV_I2C_DISPLAY_PORT, AXP192_I2C_ADDRESS, addr, &data, 1);
         if (ret != ESP_OK) {
             ESP_LOGE(TAG, "AXP192 send failed. code: 0x%.2X", ret);
         }

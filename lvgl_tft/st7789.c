@@ -8,6 +8,7 @@
 #include "freertos/task.h"
 #include "sdkconfig.h"
 
+#include "esp_err.h"
 #include "esp_log.h"
 
 #include "st7789.h"
@@ -16,10 +17,19 @@
 #include "rom/gpio.h"
 #include "driver/gpio.h"
 
+#ifdef CONFIG_LV_M5STICKC_HANDLE_AXP192
+    #include "lvgl_i2c/i2c_manager.h"
+#endif
+
 /*********************
  *      DEFINES
  *********************/
 #define TAG "st7789"
+
+#ifdef CONFIG_LV_M5STICKC_HANDLE_AXP192
+#define AXP192_I2C_ADDRESS                    0x34
+#endif
+
 /**********************
  *      TYPEDEFS
  **********************/
@@ -35,8 +45,14 @@ typedef struct {
  *  STATIC PROTOTYPES
  **********************/
 static void st7789_set_orientation(uint8_t orientation);
-
 static void st7789_send_color(void *data, size_t length);
+
+#ifdef CONFIG_LV_M5STICKC_HANDLE_AXP192
+static void axp192_write_byte(uint8_t addr, uint8_t data);
+static void axp192_init();
+static void axp192_sleep_in();
+static void axp192_sleep_out();
+#endif
 
 /**********************
  *  STATIC VARIABLES
@@ -51,6 +67,10 @@ static void st7789_send_color(void *data, size_t length);
  **********************/
 void st7789_init(void)
 {
+#ifdef CONFIG_LV_M5STICKC_HANDLE_AXP192
+    axp192_init();
+#endif
+
     lcd_init_cmd_t st7789_init_cmds[] = {
         {0xCF, {0x00, 0x83, 0X30}, 3},
         {0xED, {0x64, 0x03, 0X12, 0X81}, 4},
@@ -238,3 +258,36 @@ static void st7789_set_orientation(uint8_t orientation)
     st7789_send_cmd(ST7789_MADCTL);
     st7789_send_data((void *) &data[orientation], 1);
 }
+
+#ifdef CONFIG_LV_M5STICKC_HANDLE_AXP192
+
+    static void axp192_write_byte(uint8_t addr, uint8_t data)
+    {
+        esp_err_t ret = lvgl_i2c_write(CONFIG_LV_I2C_DISPLAY_PORT, AXP192_I2C_ADDRESS, addr, &data, 1);
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "AXP192 send failed. code: 0x%.2X", ret);
+        }
+    }
+
+    static void axp192_init()
+    {
+        // information on how to init and use AXP192 ifor M5StickC taken from
+        // 	https://forum.m5stack.com/topic/1025/m5stickc-turn-off-screen-completely
+
+        axp192_write_byte(0x10, 0xFF);			// OLED_VPP Enable
+        axp192_write_byte(0x28, 0xCC);			// Enable LDO2&LDO3, LED&TFT 3.0V
+        axp192_sleep_out();
+        ESP_LOGI(TAG, "AXP192 initialized, power enabled for LDO2 and LDO3");
+    }
+
+    static void axp192_sleep_in()
+    {
+        axp192_write_byte(0x12, 0x4b);
+    }
+
+    static void axp192_sleep_out()
+    {
+        axp192_write_byte(0x12, 0x4d);
+    }
+
+#endif

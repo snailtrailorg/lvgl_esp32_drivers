@@ -168,8 +168,12 @@ void st7789_flush(lv_disp_drv_t * drv, const lv_area_t * area, lv_color_t * colo
         offsety2 += 80;
     #endif
 #elif (LV_HOR_RES_MAX == 240) && (LV_VER_RES_MAX == 135)
-    #if (CONFIG_LV_DISPLAY_ORIENTATION_PORTRAIT) || \
-        (CONFIG_LV_DISPLAY_ORIENTATION_PORTRAIT_INVERTED)
+    #if (CONFIG_LV_DISPLAY_ORIENTATION_PORTRAIT)
+        offsetx1 += 40;
+        offsetx2 += 40;
+        offsety1 += 52;
+        offsety2 += 52;
+    #elif (CONFIG_LV_DISPLAY_ORIENTATION_PORTRAIT_INVERTED)
         offsetx1 += 40;
         offsetx2 += 40;
         offsety1 += 53;

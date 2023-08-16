@@ -106,7 +106,7 @@ static const uint8_t ACK_CHECK_EN = 1;
 
 static void i2c_send_address(i2c_cmd_handle_t cmd, uint16_t addr, i2c_rw_t rw) {
 	if (addr & I2C_ADDR_10) {
-		i2c_master_write_byte(cmd, 0xF0 | ((addr & 0x3FF) >> 7) | rw, ACK_CHECK_EN);
+		i2c_master_write_byte(cmd, 0xF0 | ((addr & 0x37F) >> 7) | rw, ACK_CHECK_EN);
 		i2c_master_write_byte(cmd, addr & 0xFF, ACK_CHECK_EN);
 	} else {
 		i2c_master_write_byte(cmd, (addr << 1) | rw, ACK_CHECK_EN);

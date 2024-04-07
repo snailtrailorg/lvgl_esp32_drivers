@@ -483,13 +483,31 @@ menu "LVGL Touch controller"
     endchoice
 
     config LV_I2C
-        bool
+                bool
         default y if LV_I2C_TOUCH
 
     config LV_I2C_TOUCH_PORT
         int
         default 1 if LV_I2C_TOUCH_PORT_1
         default 0
+
+    choice
+        prompt "Select I2C driver for the touch panel"
+        default LV_I2C_DRIVER_COMPONENT
+        depends on LV_I2C
+
+        config LV_I2C_DRIVER_COMPONENT
+            bool
+            prompt "Use I2C driver of lvgl_esp32_drivers component"
+            help
+                I2C address of the touch panel.
+
+        config LV_I2C_DRIVER_USER_DEFINED
+            bool
+            prompt "Use user defined I2C driver"
+            help
+                I2C address of the touch panel.
+    endchoice
 
 endmenu
 

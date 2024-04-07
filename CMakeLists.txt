@@ -80,7 +80,7 @@ if(CONFIG_LV_TOUCH_CONTROLLER)
     endif()
 endif()
 
-if(CONFIG_LV_I2C)
+if(CONFIG_LV_I2C_DRIVER_COMPONENT)
     list(APPEND SOURCES "lvgl_i2c/i2c_manager.c")
 endif()
 
